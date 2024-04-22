@@ -13,7 +13,8 @@ async def measure_time(n: int, max_delay: int) -> float:
     and returns total_time / n.
     Your function should return a float.
     """
-    s = time.perf_counter()
+    start = time.perf_counter()
     await wait_n(n, max_delay)
-    total_time = time.perf_counter() - s
+    end = time.perf_counter()
+    total_time = end - start
     return total_time / n
