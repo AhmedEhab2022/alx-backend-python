@@ -15,4 +15,4 @@ async def task_wait_n(n: int, max_delay: int) -> List[float]:
     without using sort() because of concurrency.
     """
     delays: List[float] = [await task_wait_random(max_delay) for _ in range(n)]
-    return sorted(delays)
+    return delays
