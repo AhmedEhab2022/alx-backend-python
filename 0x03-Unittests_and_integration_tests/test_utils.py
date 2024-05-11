@@ -5,6 +5,7 @@ import unittest
 from utils import access_nested_map, get_json
 from parameterized import parameterized
 from unittest.mock import patch, Mock
+from typing import Dict
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -38,7 +39,7 @@ class TestGetJson(unittest.TestCase):
     """ Class to test get_json function
     """
     @patch('requests.get')
-    def test_get_json(self, mock_get):
+    def test_get_json(self, mock_get) -> Dict:
         """ Test get_json function
         """
         mock_response1 = Mock()
