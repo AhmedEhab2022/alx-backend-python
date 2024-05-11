@@ -3,7 +3,6 @@
 """
 import unittest
 from utils import access_nested_map
-from typing import Any, List, Mapping, Sequence
 from parameterized import parameterized
 
 
@@ -17,5 +16,18 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map(self, input, expected):
         """ Test access_nested_map function
+            with normal use
         """
         self.assertEqual(access_nested_map(input[0], input[1]), expected)
+
+    @parameterized.expand([
+        ([{}, ("a",)], KeyError('a')),
+        ([{"a": 1}, ("a", "b")], KeyError('b'))
+    ])
+    def test_access_nested_map_exception(self, input, expected):
+        """ Test access_nested_map function
+            with exception
+        """
+        self.assertRaises(
+            expected.__class__, access_nested_map, input[0], input[1]
+        )
