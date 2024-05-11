@@ -41,21 +41,23 @@ class TestGetJson(unittest.TestCase):
     def test_get_json(self, mock_get):
         """ Test get_json function
         """
-        mock_response1 = Mock()
-        mock_response2 = Mock()
-        response_dict1 = {"payload": True}
-        response_dict2 = {"payload": False}
-        mock_response1.json.return_value = response_dict1
-        mock_response2.json.return_value = response_dict2
+        test_cases = [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False})
+        ]
 
-        test_url = "http://example.com"
-        mock_get.return_value = mock_response1
-        response = get_json(test_url)
-        mock_get.assert_called_with(test_url)
-        self.assertEqual(response, response_dict1)
+        for test_url, test_payload in test_cases:
+            # Create a Mock object for the get method
+            mock_response = Mock()
+            mock_response.json.return_value = test_payload
+            mock_get.return_value = mock_response
 
-        test_url = "http://holberton.io"
-        mock_get.return_value = mock_response2
-        response = get_json(test_url)
-        mock_get.assert_called_with(test_url)
-        self.assertEqual(response, response_dict2)
+            # Call the function under test
+            result = utils.get_json(test_url)
+
+            # Assert that requests.get was called exactly once
+            # with the correct URL
+            mock_get.assert_called_once_with(test_url)
+
+            # Assert that the result matches the expected payload
+            self.assertEqual(result, test_payload)
