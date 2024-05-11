@@ -51,9 +51,11 @@ class TestGetJson(unittest.TestCase):
         test_url = "http://example.com"
         mock_get.return_value = mock_response1
         response = get_json(test_url)
+        mock_get.assert_called_once_with(test_url)
         self.assertEqual(response, response_dict1)
 
         test_url = "http://holberton.io"
         mock_get.return_value = mock_response2
         response = get_json(test_url)
+        mock_get.assert_called_once_with(test_url)
         self.assertEqual(response, response_dict2)
