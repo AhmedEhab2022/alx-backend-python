@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-""" Test utils.access_nested_map function
+""" Test utils functions
 """
 import unittest
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from parameterized import parameterized
 from unittest.mock import patch, Mock
 from typing import Dict
@@ -58,3 +58,39 @@ class TestGetJson(unittest.TestCase):
         mock_get.return_value = mock_response2
         response = get_json(url)
         self.assertEqual(response, response_dict2)
+
+
+class TestMemoize(unittest.TestCase):
+    """ Main class to test memoize function
+    """
+    def test_memoize(self):
+        """ Test memoize function
+        """
+        class TestClass:
+            """ Class to test memoize function
+            """
+            def a_method(self):
+                """ Return 42
+                """
+                return 42
+
+            @memoize
+            def a_property(self):
+                """ Call a_method function
+                """
+                return self.a_method()
+
+        with patch.object(
+            TestClass, 'a_method', return_value=lambda: 42
+        ) as mock_method:
+            test_obj = TestClass()
+            result1 = test_obj.a_property()
+            result2 = test_obj.a_property()
+
+            mock_method.assert_called_once()
+            self.assertEqual(result1, 42)
+            self.assertEqual(result2, 42)
+
+
+if __name__ == '__main__':
+    unittest.main()
