@@ -45,6 +45,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         mock_payload = [{"name": "repo1"}, {"name": "repo2"}]
         mock_get_json.return_value = mock_payload
+        mock_public_repos_url.return_value = "http://example.com"
         client = GithubOrgClient("google")
         repos = client.public_repos()
         mock_get_json.assert_called_once()
