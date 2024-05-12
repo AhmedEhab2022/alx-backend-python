@@ -4,7 +4,7 @@
 import unittest
 from client import GithubOrgClient
 from parameterized import parameterized
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, PropertyMock
 from utils import get_json
 
 
@@ -24,3 +24,13 @@ class TestGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient(input)
         self.assertRaises(TypeError, client.org)
         mock_get_json.assert_called_once_with(url)
+
+    @patch('client.get_json')
+    def test_public_repos_url(self, mock_get_json):
+        """ Test that the _public_repos_url method returns the correct value
+        """
+        url = "http://example.com"
+        mock_get_json.return_value = {"repos_url": url}
+        client = GithubOrgClient("google")
+        self.assertEqual(client._public_repos_url, url)
+        mock_get_json.assert_called_once()
