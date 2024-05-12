@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """ Test client functions
 """
 import unittest
@@ -43,7 +42,11 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_public_repos(self, mock_public_repos_url, mock_get_json):
         """ Test that the public_repos method returns the correct value
         """
-        mock_payload = [{"name": "repo1"}, {"name": "repo2"}]
+        # mock_payload = [{"name": "repo1"}, {"name": "repo2"}]
+        mock_payload = [
+            {"name": "repo1", "license": {"key": "test"}},
+            {"name": "repo2"},
+        ]
         mock_get_json.return_value = mock_payload
         mock_public_repos_url.return_value = "http://example.com"
         client = GithubOrgClient("google")
@@ -51,4 +54,10 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once()
         mock_public_repos_url.assert_called_once()
         self.assertEqual(repos, ["repo1", "repo2"])
-        self.assertEqual(client.public_repos("test"), [])
+        self.assertEqual(client.public_repos("notFound"), [])
+        repos = client.public_repos("test")
+        self.assertEqual(repos, ["repo1"])
+
+
+if __name__ == "__main__":
+    unittest.main()
