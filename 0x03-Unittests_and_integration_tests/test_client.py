@@ -73,6 +73,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 @parameterized_class(
+    # get the parameters from the fixtures module
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
     fixtures.TEST_PAYLOAD
 )
@@ -83,8 +84,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def setUpClass(cls):
         """ Set up for all methods
         """
+        # patch get_json to return the expected payload
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
+        # set the side effect to return the expected payload
         cls.mock_get.return_value.json.side_effect = [
             cls.org_payload, cls.repos_payload
         ]
@@ -93,6 +96,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def tearDownClass(cls):
         """ Clean up after all methods
         """
+        # stop the patcher
         cls.get_patcher.stop()
 
     def test_public_repos(self):
@@ -101,8 +105,13 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("google")
         repos = client.public_repos()
         self.assertEqual(repos, self.expected_repos)
+
+    def test_public_repos_with_license(self):
+        """ Test public_repos method with license
+        """
+        client = GithubOrgClient("google")
         repos = client.public_repos("apache-2.0")
-        self.assertEqual(repos, self.apache2_repos)
+        self.assertEqual(repos, self.apache_repos)
 
 
 if __name__ == "__main__":
